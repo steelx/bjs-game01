@@ -1,0 +1,57 @@
+{
+    "animations": [
+        {
+            "name": "move",
+
+            "property": "position",
+
+            "framePerSecond": 60,
+
+            "dataType": 1,
+
+            "loopBehavior": 1,
+
+            "blendingSpeed": 0.01,
+
+            "keys": [
+                {
+                    "frame": 0,
+
+                    "values": [ 0, 1 ,-0.4, [0, 0, 0], [0, 0, 0] ]
+                },
+                {
+                    "frame": 360,
+
+                    "values":[ -5, 5, -0.4 ]
+                },
+                {
+                    "frame": 900,
+
+                    "values":[ 9, 9, -0.4]
+                },
+                {
+                    "frame": 1600,
+
+                    "values":[ 4, -10, -0.4]
+                },
+                {
+                    "frame": 2500,
+
+                    "values":[ -8, -12, -0.4]
+                },
+                {
+                    "frame": 2900,
+
+                    "values":[ 0, -4, -0.4]
+                },
+                {
+                    "frame": 3200,
+
+                    "values":[ 0, 0, -0.4 ]
+                }
+            ],
+
+            "ranges":[]
+        }
+    ]
+}

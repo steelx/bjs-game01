@@ -1,0 +1,32 @@
+{
+	"$schema": "./node_modules/rome/configuration_schema.json",
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": false,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"useBlockStatements": "error",
+				"useShorthandArrayType": "error",
+				"noShoutyConstants": "warn",
+				"noNonNullAssertion": "warn"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"trailingComma": "es5"
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"indentStyle": "space",
+		"indentSize": 2,
+		"lineWidth": 200,
+		"ignore": []
+	}
+}

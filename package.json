@@ -1,0 +1,24 @@
+{
+  "name": "bjs-game01",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "vite": "^4.2.0"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^5.54.0",
+    "@babylonjs/gui": "^5.54.0",
+    "@babylonjs/gui-editor": "^5.54.0",
+    "@babylonjs/inspector": "^5.54.0",
+    "@babylonjs/loaders": "^5.54.0",
+    "@babylonjs/materials": "^5.54.0",
+    "@babylonjs/serializers": "^5.54.0"
+  }
+}
