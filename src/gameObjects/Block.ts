@@ -1,6 +1,8 @@
 import Game from "../Game"
 import GameObject from "../GameObject"
-import { CreateBoxVertexData, Mesh, Vector3 } from "@babylonjs/core"
+import dirtRooted from "../assets/textures/dirt-rooted.jpg"
+import { Color3, CreateBoxVertexData, Mesh, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+
 
 export enum BlockType {
     NOTHING = '-',
@@ -30,6 +32,12 @@ export default class Block extends GameObject {
 
     constructor(x: number, z: number, game: Game) {
         super("Block", game)
+
+        const groundMaterial = new StandardMaterial("groundMaterial", game.scene)
+        groundMaterial.diffuseTexture = new Texture(dirtRooted, game.scene)
+        groundMaterial.emissiveColor = Color3.Blue()
+        this.material = groundMaterial
+
         const vertexData = CreateBoxVertexData({size: 1, sideOrientation: Mesh.FRONTSIDE})
         vertexData.applyToMesh(this)
 

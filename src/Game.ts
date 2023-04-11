@@ -1,7 +1,7 @@
 import GameObject from "./GameObject"
 import { Level } from "./Level"
 import Player from "./Player"
-import { Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core"
+import { Color3, Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core"
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
@@ -81,11 +81,13 @@ export default class Game {
    */
   private static initScene(engine: Engine): Scene {
     const scene = new Scene(engine)
+    scene.ambientColor = new Color3(1,1,1)
+
     const camera = new FreeCamera("camera", new Vector3(2.5, 6, -6.5), scene)
     camera.rotation = new Vector3(Math.PI / 3.5, 0, 0)
     camera.attachControl(engine.getRenderingCanvas())
 
-    const light = new HemisphericLight("light", new Vector3(0, 1, 0), scene)
+    const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
     light.intensity = 0.7
     console.log("Scene initialized!")
     return scene
