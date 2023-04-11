@@ -4,7 +4,7 @@ import { CreateBoxVertexData, Mesh, Vector3 } from "@babylonjs/core"
 
 export enum BlockType {
     NOTHING = '-',
-    EMPTY = '_',
+    EMPTY = '.',
     START = 'S',
     FINISH = 'F',
 }

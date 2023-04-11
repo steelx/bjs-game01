@@ -20,11 +20,11 @@ enum GameState {
 
 const levels = [
   [
-    `S _ _ _ -1 -`.split(' '),
+    `S . . . -1 -`.split(' '),
     `1 - - - - -`.split(' '),
-    `_ - _ _ -2 -`.split(' '),
-    `_ _ _ - - -`.split(' '),
-    `- - 2 _ _ F`.split(' '),
+    `. - . . -2 -`.split(' '),
+    `. . . - - -`.split(' '),
+    `- - 2 . . F`.split(' '),
   ]
 ]
 
