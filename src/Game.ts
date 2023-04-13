@@ -102,6 +102,7 @@ export default class Game {
     playerMaterial.emissiveColor = Color3.White()
     playerMaterial.emissiveFresnelParameters = getEmmisiveFresnel()
     playerMaterial.opacityFresnelParameters = getOpacityFresnel()
+    playerMaterial.alpha = 0.2
 
     const skybox = MeshBuilder.CreateBox("skyBox", { size: 100 }, scene)
     const skyboxMaterial = new StandardMaterial("skyBox", scene)
