@@ -1,7 +1,7 @@
 import GameObject from "./GameObject"
 import { Level } from "./Level"
 import Player from "./Player"
-import { Color3, Engine, FreeCamera, FresnelParameters, HemisphericLight, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -103,6 +103,19 @@ export default class Game {
     playerMaterial.emissiveFresnelParameters = getEmmisiveFresnel()
     playerMaterial.opacityFresnelParameters = getOpacityFresnel()
 
+    const skybox = MeshBuilder.CreateBox("skyBox", { size: 100 }, scene)
+    const skyboxMaterial = new StandardMaterial("skyBox", scene)
+    skyboxMaterial.backFaceCulling = false
+    skyboxMaterial.reflectionTexture = new CubeTexture(
+        "./images/sky/sky_",
+        scene,
+        ["px.bmp", "py.bmp", "pz.bmp", "nx.bmp", "ny.bmp", "nz.bmp"]
+    )
+    skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE
+    skyboxMaterial.diffuseColor = new Color3(0, 0, 0)
+    skyboxMaterial.specularColor = new Color3(0, 0, 0)
+    skybox.material = skyboxMaterial
+
     const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
     light.intensity = 0.7
     console.log("Scene initialized!")
@@ -116,7 +129,7 @@ export default class Game {
 
 
 function getEmmisiveFresnel(): FresnelParameters {
-  const [r,g,b] = randomColor({luminosity: 'light', hue: 'red', format: 'rgbArray'})
+  const [r,g,b] = randomColor({luminosity: 'light', hue: 'red', format: 'rgbArray'}) as unknown as number[]
   const color = Color3.FromInts(r,g,b)
   const fresnel = new FresnelParameters()
   fresnel.isEnabled = true
