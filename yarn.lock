@@ -177,6 +177,11 @@
   dependencies:
     "@fortawesome/fontawesome-common-types" "6.4.0"
 
+"@types/randomcolor@^0.5.7":
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/@types/randomcolor/-/randomcolor-0.5.7.tgz#314b84f571cb11bc3a7785c42d50efc7fa327147"
+  integrity sha512-LPcG96dGYRCsXlk1fslUNIg6ebEi+bKNyn84uBL/pu2cRSf5i/djD3ArJZOyzszVMVV/DB87va6pMZP+tRSl/w==
+
 esbuild@^0.17.5:
   version "0.17.14"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.17.14.tgz#d61a22de751a3133f3c6c7f9c1c3e231e91a3245"
@@ -252,6 +257,11 @@ postcss@^8.4.21:
     nanoid "^3.3.4"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+randomcolor@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/randomcolor/-/randomcolor-0.6.2.tgz#7a57362ae1a1278439aeed2c15e5deb8ea33f56d"
+  integrity sha512-Mn6TbyYpFgwFuQ8KJKqf3bqqY9O1y37/0jgSK/61PUxV4QfIMv0+K2ioq8DfOjkBslcjwSzRfIDEXfzA9aCx7A==
 
 resolve@^1.22.1:
   version "1.22.1"

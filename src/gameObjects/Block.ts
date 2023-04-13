@@ -33,10 +33,7 @@ export default class Block extends GameObject {
     constructor(x: number, z: number, game: Game) {
         super("Block", game)
 
-        const groundMaterial = new StandardMaterial("groundMaterial", game.scene)
-        groundMaterial.diffuseTexture = new Texture(dirtRooted, game.scene)
-        groundMaterial.emissiveColor = Color3.Blue()
-        this.material = groundMaterial
+        this.material = game.scene.getMaterialByName("groundMaterial")
 
         const vertexData = CreateBoxVertexData({size: 1, sideOrientation: Mesh.FRONTSIDE})
         vertexData.applyToMesh(this)

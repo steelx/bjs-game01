@@ -1,7 +1,11 @@
 import GameObject from "./GameObject"
 import { Level } from "./Level"
 import Player from "./Player"
-import { Color3, Engine, FreeCamera, HemisphericLight, Scene, Vector3 } from "@babylonjs/core"
+import { Color3, Engine, FreeCamera, FresnelParameters, HemisphericLight, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import randomColor from "randomcolor"
+
+import dirtRooted from "./assets/textures/dirt-rooted.jpg"
+
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
@@ -87,6 +91,18 @@ export default class Game {
     camera.rotation = new Vector3(Math.PI / 3.5, 0, 0)
     camera.attachControl(engine.getRenderingCanvas())
 
+    // Materials
+    // TODO: find a correct way to load materials
+    const groundMaterial = new StandardMaterial("groundMaterial", scene)
+    groundMaterial.diffuseTexture = new Texture(dirtRooted, scene)
+    groundMaterial.emissiveColor = Color3.Blue()
+
+    const playerMaterial = new StandardMaterial("playerMaterial", scene)
+    playerMaterial.diffuseColor = Color3.White()
+    playerMaterial.emissiveColor = Color3.White()
+    playerMaterial.emissiveFresnelParameters = getEmmisiveFresnel()
+    playerMaterial.opacityFresnelParameters = getOpacityFresnel()
+
     const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
     light.intensity = 0.7
     console.log("Scene initialized!")
@@ -96,4 +112,25 @@ export default class Game {
   reset() {
     throw new Error("Method not implemented.")
   }
+}
+
+
+function getEmmisiveFresnel(): FresnelParameters {
+  const [r,g,b] = randomColor({luminosity: 'light', hue: 'red', format: 'rgbArray'})
+  const color = Color3.FromInts(r,g,b)
+  const fresnel = new FresnelParameters()
+  fresnel.isEnabled = true
+  fresnel.bias = 0.6
+  fresnel.power = 2
+  fresnel.leftColor = Color3.Black()
+  fresnel.rightColor = color
+  return fresnel
+}
+
+function getOpacityFresnel(): FresnelParameters {
+  const fresnel = new FresnelParameters()
+  fresnel.isEnabled = true
+  fresnel.leftColor = Color3.White()
+  fresnel.rightColor = Color3.Black()
+  return fresnel
 }

@@ -22,6 +22,7 @@ export default class Player extends GameObject {
         vertexData.applyToMesh(this)
 
         this.position.y = Player.START_HEIGHT
+        this.material = game.scene.getMaterialByName("playerMaterial")
 
         this.getScene().registerBeforeRender(() => {
             if (this.position.y < - 10) {
