@@ -9,6 +9,7 @@ import dirtRooted from "./assets/textures/dirt-rooted.jpg"
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
+import { SkyMaterial } from "@babylonjs/materials"
 
 enum GameState {
   START = 0,
@@ -104,17 +105,18 @@ export default class Game {
     playerMaterial.opacityFresnelParameters = getOpacityFresnel()
     playerMaterial.alpha = 0.2
 
-    const skybox = MeshBuilder.CreateBox("skyBox", { size: 100 }, scene)
     const skyboxMaterial = new StandardMaterial("skyBox", scene)
     skyboxMaterial.backFaceCulling = false
     skyboxMaterial.reflectionTexture = new CubeTexture(
-        "./images/sky/sky_",
-        scene,
-        ["px.bmp", "py.bmp", "pz.bmp", "nx.bmp", "ny.bmp", "nz.bmp"]
+      "./images/sky/sky_",
+      scene,
+      ["px.bmp", "py.bmp", "pz.bmp", "nx.bmp", "ny.bmp", "nz.bmp"]
     )
     skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE
     skyboxMaterial.diffuseColor = new Color3(0, 0, 0)
     skyboxMaterial.specularColor = new Color3(0, 0, 0)
+
+    const skybox = MeshBuilder.CreateBox("skyBox", { size: 100 }, scene)
     skybox.material = skyboxMaterial
 
     const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
