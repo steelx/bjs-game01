@@ -1,7 +1,7 @@
 import Game from "../Game";
 import GameObject from "../GameObject";
 import Spike from "./Spike";
-import { MeshBuilder, ParticleSystem } from "@babylonjs/core";
+import { MeshBuilder } from "@babylonjs/core";
 
 export default class Key extends GameObject {
     public number: number;

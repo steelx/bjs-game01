@@ -1,7 +1,7 @@
 import GameObject from "./GameObject"
 import { Level } from "./Level"
 import Player from "./Player"
-import { Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -9,7 +9,6 @@ import dirtRooted from "./assets/textures/dirt-rooted.jpg"
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { SkyMaterial } from "@babylonjs/materials"
 
 enum GameState {
   START = 0,

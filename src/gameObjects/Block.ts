@@ -1,8 +1,6 @@
 import Game from "../Game"
 import GameObject from "../GameObject"
-import dirtRooted from "../assets/textures/dirt-rooted.jpg"
-import { Color3, CreateBoxVertexData, Mesh, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
-
+import { CreateBoxVertexData, Mesh, Vector3 } from "@babylonjs/core"
 
 export enum BlockType {
     NOTHING = '-',
