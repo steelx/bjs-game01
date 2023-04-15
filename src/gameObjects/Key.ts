@@ -1,7 +1,7 @@
+import { Vector3 } from "@babylonjs/core";
 import Game from "../Game";
 import GameObject from "../GameObject";
 import Spike from "./Spike";
-import { MeshBuilder } from "@babylonjs/core";
 
 export default class Key extends GameObject {
     public number: number;
@@ -12,7 +12,13 @@ export default class Key extends GameObject {
         super("key", game)
         this.number = number
         this.spike = null
-        const _key = MeshBuilder.CreateTorus("key", {diameter: 0.75, thickness: 0.25, tessellation: 10}, this.getScene())
+        const _key = game.assets['key'].meshes[0].clone('key3D', this)
+        if (_key === null) {
+            throw new Error("Could not find 'Key' mesh")
+        }
+        _key.isVisible = true
+        _key.scaling = new Vector3(0.01, 0.01, 0.01)
+        _key.position = new Vector3(0, 0, 0)
         _key.parent = this
     }
 
@@ -23,7 +29,7 @@ export default class Key extends GameObject {
         this.spike = spike
     }
 
-    private initParticles(): void {}
+    private initParticles(): void { }
 
     dispose(): void {
         this.spike?.dispose()

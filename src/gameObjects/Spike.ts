@@ -9,7 +9,7 @@ export default class Spike extends GameObject {
     constructor(game: Game, number: number) {
         super("key", game)
         this.number = number
-        this.sharpPart = MeshBuilder.CreateCylinder("spike", {diameter: 0.5, height: 2, tessellation: 10 }, this.getScene())
+        this.sharpPart = MeshBuilder.CreateCylinder("spike", { diameter: 0.5, height: 1, tessellation: 10 }, this.getScene())
         const mat = new StandardMaterial("spikeMat", this.getScene())
         mat.emissiveColor = Color3.Red()
         mat.specularColor = Color3.Black()

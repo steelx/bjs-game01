@@ -1,7 +1,6 @@
-import GameObject from "./GameObject"
 import { Level } from "./Level"
 import Player from "./Player"
-import { Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { AbstractMesh, AssetsManager, Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -9,6 +8,8 @@ import dirtRooted from "./assets/textures/dirt-rooted.jpg"
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
+
+export type Assets = Record<string, { meshes: AbstractMesh[], anims: Record<string, any> }>
 
 enum GameState {
   START = 0,
@@ -36,7 +37,7 @@ export default class Game {
   protected engine: Engine
   public scene: Scene
   private state: GameState = GameState.START
-  assets: GameObject[]
+  assets: Assets
   currentLevel: number
   player: Player | null
   level: Level | null
@@ -46,24 +47,44 @@ export default class Game {
     this.canvas.style.height = "100%"
     this.engine = new Engine(this.canvas, true)
     this.scene = Game.initScene(this.engine)
-    this.assets = []
+    this.assets = {}
     this.currentLevel = 0
     this.player = null
     this.level = null
 
-    this.initGame()
+    const loader = new AssetsManager(this.scene)
 
-    console.log("Running game-loop...")
-    this.engine.runRenderLoop(() => {
-      switch (this.state) {
-        case GameState.START:
-          this.scene.render()
-          break
-        default:
-          this.scene.render()
-          break
+    const animsKey = {
+      'idle': { from: 0, to: 80, speed: 1, loop: true }
+    }
+
+    const toLoad = [
+      { name: "key", folder: "_assets/key/", filename: "key.babylon", anims: animsKey },
+    ]
+
+    const _this = this
+    toLoad.forEach((asset) => {
+      const task = loader.addMeshTask(asset.name, "", asset.folder, asset.filename)
+      task.onSuccess = (t) => {
+        t.loadedMeshes.forEach((mesh) => { mesh.isVisible = false })
+        // save in assets array
+        console.log("loading meshes ", t.name);
+        _this.assets[t.name] = { meshes: t.loadedMeshes, anims: asset.anims }
       }
+      task.onError = (task, message, exception) => {
+        console.log(message, exception);
+      };
     })
+
+    loader.onFinish = (tasks) => {
+      this.initGame()
+      console.log("Running game-loop...")
+      _this.engine.runRenderLoop(() => {
+        _this.scene.render();
+      })
+    }
+
+    loader.load();
   }
 
   /**
@@ -85,7 +106,7 @@ export default class Game {
    */
   private static initScene(engine: Engine): Scene {
     const scene = new Scene(engine)
-    scene.ambientColor = new Color3(1,1,1)
+    scene.ambientColor = new Color3(1, 1, 1)
 
     const camera = new FreeCamera("camera", new Vector3(2.5, 6, -6.5), scene)
     camera.rotation = new Vector3(Math.PI / 3.5, 0, 0)
@@ -131,8 +152,8 @@ export default class Game {
 
 
 function getEmmisiveFresnel(): FresnelParameters {
-  const [r,g,b] = randomColor({luminosity: 'light', hue: 'red', format: 'rgbArray'}) as unknown as number[]
-  const color = Color3.FromInts(r,g,b)
+  const [r, g, b] = randomColor({ luminosity: 'light', hue: 'red', format: 'rgbArray' }) as unknown as number[]
+  const color = Color3.FromInts(r, g, b)
   const fresnel = new FresnelParameters()
   fresnel.isEnabled = true
   fresnel.bias = 0.6

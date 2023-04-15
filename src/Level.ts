@@ -37,8 +37,8 @@ export class Level {
     */
     public static FromInts(matrix: string[][], game: Game): Level {
         const level = new Level(game)
-        for(let z = 0; z < matrix.length; z++) {
-            for(let x = 0; x < matrix[z].length; x++) {
+        for (let z = 0; z < matrix.length; z++) {
+            for (let x = 0; x < matrix[z].length; x++) {
                 const type = matrix[z][x]
                 let block = null
                 if (type === Block.TYPES.NOTHING) {
@@ -48,8 +48,8 @@ export class Level {
                     block = new Block(x, z, game)
                     level.blocks.push(block)
                     const isNaN = Number.isNaN(Number(type))
-                    if(isNaN) {
-                        if(type === Block.TYPES.EMPTY) {
+                    if (isNaN) {
+                        if (type === Block.TYPES.EMPTY) {
                             continue;// do nothing
                         } else if (type === Block.TYPES.START) {
                             level.start = block
@@ -79,9 +79,9 @@ export class Level {
         }
 
         // For all keys, link to its corresponding spike
-        for(let k=0; k < level.keys.length; k++) {
+        for (let k = 0; k < level.keys.length; k++) {
             const key = level.keys[k]
-            for(let s=0; s < level.spikes.length; s++) {
+            for (let s = 0; s < level.spikes.length; s++) {
                 const spike = level.spikes[s]
                 if (key.number === spike.number) {
                     key.link(spike)
