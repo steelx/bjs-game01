@@ -1,7 +1,17 @@
-import { Vector3 } from "@babylonjs/core";
+import { Animation, Quaternion, Vector3 } from "@babylonjs/core";
 import Game from "../Game";
 import GameObject from "../GameObject";
 import Spike from "./Spike";
+
+const startQuaternion = Quaternion.RotationYawPitchRoll(0, 0, 0)
+const endQuaternion = Quaternion.RotationYawPitchRoll(0, 0, Math.PI)
+const finalQuaternion = Quaternion.RotationYawPitchRoll(0, 0, Math.PI * 2)
+const animation = new Animation("keyAnim", "rotationQuaternion", 30, Animation.ANIMATIONTYPE_QUATERNION, Animation.ANIMATIONLOOPMODE_CYCLE)
+animation.setKeys([
+    { frame: 0, value: startQuaternion },
+    { frame: 30, value: endQuaternion },
+    { frame: 60, value: finalQuaternion },
+])
 
 export default class Key extends GameObject {
     public number: number;
@@ -20,6 +30,8 @@ export default class Key extends GameObject {
         _key.scaling = new Vector3(0.01, 0.01, 0.01)
         _key.position = new Vector3(0, 0, 0)
         _key.parent = this
+
+        this.getScene().beginDirectAnimation(_key, [animation], 0, 60, true, 1.0)
     }
 
     /**

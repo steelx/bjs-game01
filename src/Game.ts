@@ -1,6 +1,6 @@
 import { Level } from "./Level"
 import Player from "./Player"
-import { AbstractMesh, AssetsManager, Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { AbstractMesh, Animation, AssetsManager, Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -23,6 +23,14 @@ enum GameState {
   WIN,
 }
 
+const animsKey = {
+  'idle': { from: 0, to: 80, speed: 1, loop: true }
+}
+
+const toLoad = [
+  { name: "key", folder: "_assets/key/", filename: "key.babylon", anims: animsKey },
+]
+
 const levels = [
   [
     `S . . . -1 -`.split(' '),
@@ -37,30 +45,18 @@ export default class Game {
   protected engine: Engine
   public scene: Scene
   private state: GameState = GameState.START
-  assets: Assets
-  currentLevel: number
-  player: Player | null
-  level: Level | null
+  assets: Assets = {}
+  currentLevel: number = 0
+  player: Player | null = null
+  level: Level | null = null
 
   constructor(protected canvas: HTMLCanvasElement) {
     this.canvas.style.width = "100%"
     this.canvas.style.height = "100%"
     this.engine = new Engine(this.canvas, true)
     this.scene = Game.initScene(this.engine)
-    this.assets = {}
-    this.currentLevel = 0
-    this.player = null
-    this.level = null
 
     const loader = new AssetsManager(this.scene)
-
-    const animsKey = {
-      'idle': { from: 0, to: 80, speed: 1, loop: true }
-    }
-
-    const toLoad = [
-      { name: "key", folder: "_assets/key/", filename: "key.babylon", anims: animsKey },
-    ]
 
     const _this = this
     toLoad.forEach((asset) => {
@@ -94,6 +90,7 @@ export default class Game {
   private initGame(): void {
     this.player = new Player(this)
     this.level = Level.FromInts(levels[this.currentLevel], this)
+    this.scene.beginAnimation(this, 0, 100, true, 1.0)
 
     console.log("Level initialized!")
 
@@ -106,7 +103,6 @@ export default class Game {
    */
   private static initScene(engine: Engine): Scene {
     const scene = new Scene(engine)
-    scene.ambientColor = new Color3(1, 1, 1)
 
     const camera = new FreeCamera("camera", new Vector3(2.5, 6, -6.5), scene)
     camera.rotation = new Vector3(Math.PI / 3.5, 0, 0)
@@ -139,8 +135,11 @@ export default class Game {
     const skybox = MeshBuilder.CreateBox("skyBox", { size: 100 }, scene)
     skybox.material = skyboxMaterial
 
+    scene.ambientColor = new Color3(1, 1, 1)
     const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
     light.intensity = 0.7
+
+
     console.log("Scene initialized!")
     return scene
   }
