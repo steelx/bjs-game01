@@ -21,14 +21,15 @@ export default class Player extends GameObject {
         const vertexData = CreateSphereVertexData({ diameter: 0.75, segments: 16, sideOrientation: 2 })
         vertexData.applyToMesh(this)
 
+        this.addKeydownListener()
+        this.addKeyupListener()
+
         this.position.y = Player.START_HEIGHT
         this.material = game.scene.getMaterialByName("playerMaterial")
 
         this.getScene().registerBeforeRender(() => {
             // Move the player if player is moving
             this.move()
-            this.addKeydownListener()
-            this.addKeyupListener()
 
             if (this.position.y < - 10) {
                 this.game.reset()
@@ -36,7 +37,10 @@ export default class Player extends GameObject {
         })
     }
 
-    dispose(): void { }
+    dispose(): void {
+        window.removeEventListener("keydown", this.handleKeydown)
+        window.removeEventListener("keyup", this.handleKeyup)
+    }
 
     move(): void {
         if (this.directions[0] !== 0) {
@@ -75,36 +79,40 @@ export default class Player extends GameObject {
     }
 
     private addKeydownListener(): void {
-        window.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "w"://top
-                    this.directions[0] = 1
-                    break
-                case "s"://bottom
-                    this.directions[1] = 1
-                    break
-                case "a"://left
-                    this.rotations[0] = 1
-                    break
-                case "d"://right
-                    this.rotations[1] = 1
-                    break
-            }
-        });
+        window.addEventListener("keydown", this.handleKeydown)
     }
 
     private addKeyupListener(): void {
-        window.addEventListener("keyup", (e) => {
-            switch (e.key) {
-                case "w"://top
-                case "s"://bottom
-                    this.directions = [0, 0]
-                    break
-                case "a"://left
-                case "d"://right
-                    this.rotations = [0, 0]
-                    break
-            }
-        });
+        window.addEventListener("keyup", this.handleKeyup)
     }
+
+    private handleKeydown = (e: KeyboardEvent): void => {
+        switch (e.key) {
+            case "w": //top
+                this.directions[0] = 1;
+                break;
+            case "s": //bottom
+                this.directions[1] = 1;
+                break;
+            case "a": //left
+                this.rotations[0] = 1;
+                break;
+            case "d": //right
+                this.rotations[1] = 1;
+                break;
+        }
+    };
+
+    private handleKeyup = (e: KeyboardEvent): void => {
+        switch (e.key) {
+            case "w": //top
+            case "s": //bottom
+                this.directions = [0, 0];
+                break;
+            case "a": //left
+            case "d": //right
+                this.rotations = [0, 0];
+                break;
+        }
+    };
 }
