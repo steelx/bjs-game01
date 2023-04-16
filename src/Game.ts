@@ -1,6 +1,6 @@
 import { Level } from "./Level"
 import Player from "./Player"
-import { AbstractMesh, Animation, AssetsManager, Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { AbstractMesh, AssetsManager, Color3, CubeTexture, Engine, FreeCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -9,7 +9,7 @@ import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 
-export type Assets = Record<string, { meshes: AbstractMesh[], anims: Record<string, any> }>
+export type Assets = Record<string, { meshes: AbstractMesh[], anims?: Record<string, any> }>
 
 enum GameState {
   START = 0,
@@ -23,12 +23,8 @@ enum GameState {
   WIN,
 }
 
-const animsKey = {
-  'idle': { from: 0, to: 80, speed: 1, loop: true }
-}
-
 const toLoad = [
-  { name: "key", folder: "_assets/key/", filename: "key.babylon", anims: animsKey },
+  { name: "key", folder: "_assets/key/", filename: "key.babylon" },
 ]
 
 const levels = [
@@ -54,7 +50,7 @@ export default class Game {
     this.canvas.style.width = "100%"
     this.canvas.style.height = "100%"
     this.engine = new Engine(this.canvas, true)
-    this.scene = Game.initScene(this.engine)
+    this.scene = Game.createScene(this.engine)
 
     const loader = new AssetsManager(this.scene)
 
@@ -65,14 +61,14 @@ export default class Game {
         t.loadedMeshes.forEach((mesh) => { mesh.isVisible = false })
         // save in assets array
         console.log("loading meshes ", t.name);
-        _this.assets[t.name] = { meshes: t.loadedMeshes, anims: asset.anims }
+        _this.assets[t.name] = { meshes: t.loadedMeshes }
       }
-      task.onError = (task, message, exception) => {
+      task.onError = (_task, message, exception) => {
         console.log(message, exception);
       };
     })
 
-    loader.onFinish = (tasks) => {
+    loader.onFinish = (_tasks) => {
       this.initGame()
       console.log("Running game-loop...")
       _this.engine.runRenderLoop(() => {
@@ -101,7 +97,7 @@ export default class Game {
   /**
    * Initialize the scene: everything that will not change during the game
    */
-  private static initScene(engine: Engine): Scene {
+  private static createScene(engine: Engine): Scene {
     const scene = new Scene(engine)
 
     const camera = new FreeCamera("camera", new Vector3(2.5, 6, -6.5), scene)
