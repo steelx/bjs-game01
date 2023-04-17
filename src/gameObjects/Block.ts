@@ -1,6 +1,7 @@
+// src/gameObjects/Block.ts
 import Game from "../Game"
 import GameObject from "../GameObject"
-import { CreateBoxVertexData, Mesh, Vector3 } from "@babylonjs/core"
+import { CreateBoxVertexData, Mesh, PhysicsImpostor, Vector3 } from "@babylonjs/core"
 
 export enum BlockType {
     NOTHING = '-',
@@ -33,13 +34,16 @@ export default class Block extends GameObject {
 
         this.material = game.scene.getMaterialByName("groundMaterial")
 
-        const vertexData = CreateBoxVertexData({size: 1, sideOrientation: Mesh.FRONTSIDE})
+        const vertexData = CreateBoxVertexData({ size: 1, sideOrientation: Mesh.FRONTSIDE })
         vertexData.applyToMesh(this)
+
+        this.scaling = new Vector3(1, 1, 1)
+        this.physicsImpostor = new PhysicsImpostor(this, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.3 }, this.getScene())
 
         this.position = Vector3.Zero()
         this.position.x = x
         this.position.z = -z
     }
 
-    dispose(): void {}
+    dispose(): void { }
 }

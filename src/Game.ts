@@ -1,6 +1,7 @@
+// src/Game.ts
 import { Level } from "./Level"
 import Player from "./Player"
-import { AbstractMesh, AssetsManager, Color3, CubeTexture, Engine, FollowCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
+import { AbstractMesh, AssetsManager, CannonJSPlugin, Color3, CubeTexture, Engine, FollowCamera, FresnelParameters, HemisphericLight, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import randomColor from "randomcolor"
 
 import dirtRooted from "./assets/textures/dirt-rooted.jpg"
@@ -109,7 +110,7 @@ export default class Game {
     const camera = new FollowCamera("FollowCam", new Vector3(0, 10, -10), scene);
 
     // The goal distance of camera from target
-    camera.radius = 5
+    camera.radius = 3
     // The goal height of camera above local origin (centre) of target
     camera.heightOffset = 4
     // The goal rotation of camera around local origin (centre) of target in x y plane
@@ -117,7 +118,7 @@ export default class Game {
     // Acceleration of camera in moving from current to goal position
     camera.cameraAcceleration = 0.5
     // The speed at which acceleration is halted
-    camera.maxCameraSpeed = 5
+    camera.maxCameraSpeed = 1
     // This attaches the camera to the canvas
     // camera.attachControl()
 
@@ -151,6 +152,11 @@ export default class Game {
     scene.ambientColor = new Color3(1, 1, 1)
     const light = new HemisphericLight("light", new Vector3(0.5, 1, 0), scene)
     light.intensity = 0.7
+
+    // Initialize the physics engine
+    const gravityVector = new Vector3(0, -9.81, 0);
+    const physicsPlugin = new CannonJSPlugin();
+    scene.enablePhysics(gravityVector, physicsPlugin);
 
 
     console.log("Scene initialized!")

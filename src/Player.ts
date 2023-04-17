@@ -1,25 +1,30 @@
+// src/gameObjects/Player.ts
 import Game from "./Game";
 import GameObject from "./GameObject";
-import { CreateSphereVertexData, Vector3 } from "@babylonjs/core";
+import { CreateSphereVertexData, Nullable, PhysicsImpostor, Quaternion, Vector3 } from "@babylonjs/core";
 
 export default class Player extends GameObject {
-    body: null;//Rigidbody
-    directions: [number, number];// two directions forwards and backwards
-    rotations: [number, number];// two directions left and right
-    static START_HEIGHT: number = 1;
+    body: Nullable<PhysicsImpostor> = null//Rigidbody
+    directions: [number, number]// two directions forwards and backwards
+    rotations: [number, number]// two directions left and right
+    static START_HEIGHT: number = 1
 
     constructor(game: Game) {
-        super("player", game);
+        super("player", game)
 
-        // TODO: physics body
-        this.body = null
         // player can move in two directions
         this.directions = [0, 0]
         // and can rotate in two directions
         this.rotations = [0, 0]
 
-        const vertexData = CreateSphereVertexData({ diameter: 0.75, segments: 16, sideOrientation: 2 })
+        const size = 0.75
+        const vertexData = CreateSphereVertexData({ diameter: size, segments: 16, sideOrientation: 2 })
         vertexData.applyToMesh(this)
+        this.scaling = new Vector3(size, size, size)
+
+        // physics body
+        this.body = new PhysicsImpostor(this, PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, game.scene);
+        this.physicsImpostor = this.body
 
         this.addKeydownListener()
         this.addKeyupListener()
@@ -58,24 +63,31 @@ export default class Player extends GameObject {
     }
 
     private moveTo(s: number): void {
-        // compute the world matrix of the player
-        this.computeWorldMatrix()
+        const force = new Vector3(0, 0, s * 10);
 
-        // move forward along the global z-axis
-        const v = new Vector3(0, 0, s)
         // get the world matrix of the player
-        const m = this.getWorldMatrix()
-        // transform the vector v by the world matrix m
-        const v2 = Vector3.TransformCoordinates(v, m)
-        v2.subtractInPlace(this.position)
-        v2.normalize().scaleInPlace(0.05)
-        // add to player position
-        this.position.addInPlace(v2)
+        const m = this.getWorldMatrix();
+
+        // transform the vector force by the world matrix m
+        const transformedForce = Vector3.TransformNormal(force, m);
+
+        // Apply force to the physics body
+        if (this.body) {
+            this.body.applyForce(transformedForce, this.position);
+        }
     }
 
     private rotateTo(s: number): void {
-        // rotate the player
-        this.rotation.y += s * 0.05
+        const rotationAxis = new Vector3(0, 1, 0);
+        const rotationAmount = s * 0.01;
+
+        // Create a quaternion for the rotation
+        const rotationQuaternion = Quaternion.RotationAxis(rotationAxis, rotationAmount);
+
+        // Multiply the player's existing rotation quaternion by the new rotation
+        if (this.rotationQuaternion) {
+            this.rotationQuaternion.multiplyInPlace(rotationQuaternion);
+        }
     }
 
     private addKeydownListener(): void {

@@ -1,3 +1,4 @@
+// src/gameObjects/Spike.ts
 import Game from "../Game";
 import GameObject from "../GameObject";
 import { Color3, CreateBoxVertexData, CreateCylinderVertexData, FloatArray, IndicesArray, Material, Mesh, MeshBuilder, Nullable, StandardMaterial, VertexData } from "@babylonjs/core";
