@@ -7,6 +7,5 @@ Babylon js game using vite and Typescript
 
 
 
-
-https://user-images.githubusercontent.com/3184210/232679437-af51fe6a-d332-44eb-aa4f-99e7989dbc5b.mov
+https://user-images.githubusercontent.com/3184210/232780639-e08e03aa-77be-421d-81a8-088d922d4a66.mp4
 
