@@ -1,13 +1,14 @@
 // src/gameObjects/Player.ts
 import Game from "./Game";
 import GameObject from "./GameObject";
-import { CreateSphereVertexData, Nullable, PhysicsImpostor, Quaternion, Vector3 } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CreateSphereVertexData, Mesh, MeshBuilder, Nullable, PhysicsImpostor, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
 
 export default class Player extends GameObject {
     body: Nullable<PhysicsImpostor> = null//Rigidbody
     directions: [number, number]// two directions forwards and backwards
     rotations: [number, number]// two directions left and right
-    static START_HEIGHT: number = 1
+    static START_HEIGHT: number = 2
+    targetRotation: number = 0
 
     constructor(game: Game) {
         super("player", game)
@@ -23,7 +24,7 @@ export default class Player extends GameObject {
         this.scaling = new Vector3(size, size, size)
 
         // physics body
-        this.body = new PhysicsImpostor(this, PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9 }, game.scene);
+        this.body = new PhysicsImpostor(this, PhysicsImpostor.SphereImpostor, { mass: 0.5, restitution: 0.1, friction: 1 }, game.scene);
         this.physicsImpostor = this.body
 
         this.addKeydownListener()
@@ -31,6 +32,16 @@ export default class Player extends GameObject {
 
         this.position.y = Player.START_HEIGHT
         this.material = game.scene.getMaterialByName("playerMaterial")
+
+        // Set the camera target to the player instance
+        const camera = this.getScene().getCameraByName("FollowCam") as ArcRotateCamera;
+        if (camera) {
+            camera.lockedTarget = this;
+        }
+
+        const arrow = createArrowIndicator(this.getScene())!
+        arrow.position.y = 0.1 // Position the arrow above the player
+        arrow.parent = this
 
         this.getScene().registerBeforeRender(() => {
             // Move the player if player is moving
@@ -54,11 +65,24 @@ export default class Player extends GameObject {
         if (this.directions[1] !== 0) {
             this.moveTo(1)
         }
+
+        // Update the camera rotation based on the player's target rotation
+        const camera = this.getScene().getCameraByName("FollowCam") as ArcRotateCamera;
+        if (camera) {
+            camera.alpha = this.targetRotation;
+        }
         if (this.rotations[0] !== 0) {
             this.rotateTo(-0.9)
         }
         if (this.rotations[1] !== 0) {
             this.rotateTo(0.9)
+        }
+
+        // Update the arrow rotation
+        const arrow = this.getChildMeshes().find((mesh) => mesh.name === "arrowCylinder")
+
+        if (arrow && arrow.parent) {
+            arrow.rotation.y = this.rotationQuaternion?.toEulerAngles().y as number
         }
     }
 
@@ -80,6 +104,7 @@ export default class Player extends GameObject {
     private rotateTo(s: number): void {
         const rotationAxis = new Vector3(0, 1, 0);
         const rotationAmount = s * 0.01;
+        this.targetRotation += rotationAmount;
 
         // Create a quaternion for the rotation
         const rotationQuaternion = Quaternion.RotationAxis(rotationAxis, rotationAmount);
@@ -128,3 +153,24 @@ export default class Player extends GameObject {
         }
     };
 }
+
+const createArrowIndicator = (scene: Scene) => {
+    // Create a cone (arrowhead) and a cylinder (arrow shaft)
+    const cone = MeshBuilder.CreateCylinder("arrowCone", { diameterTop: 0, diameterBottom: 0.1, height: 0.2 }, scene);
+    const cylinder = MeshBuilder.CreateCylinder("arrowCylinder", { diameter: 0.05, height: 0.1 }, scene);
+
+    // Set the material for arrowhead and shaft
+    const arrowMaterial = new StandardMaterial("arrowMaterial", scene);
+    arrowMaterial.diffuseColor = Color3.Red();
+    cone.material = arrowMaterial;
+    cylinder.material = arrowMaterial;
+
+    // Position the arrowhead and shaft
+    cone.position.y = 0.3;
+    cylinder.position.y = 0.2;
+
+    // Combine the arrowhead and shaft into a single mesh
+    const arrow = Mesh.MergeMeshes([cone, cylinder], true, true, undefined, false, true);
+
+    return arrow;
+};

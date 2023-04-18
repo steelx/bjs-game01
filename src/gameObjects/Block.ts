@@ -38,7 +38,7 @@ export default class Block extends GameObject {
         vertexData.applyToMesh(this)
 
         this.scaling = new Vector3(1, 1, 1)
-        this.physicsImpostor = new PhysicsImpostor(this, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.3 }, this.getScene())
+        this.physicsImpostor = new PhysicsImpostor(this, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.5, friction: 0.8 }, this.getScene())
 
         this.position = Vector3.Zero()
         this.position.x = x
