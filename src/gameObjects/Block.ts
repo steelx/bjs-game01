@@ -32,11 +32,10 @@ export default class Block extends GameObject {
     constructor(x: number, z: number, game: Game) {
         super("Block", game)
 
-        this.material = game.scene.getMaterialByName("groundMaterial")
-
         const vertexData = CreateBoxVertexData({ size: 1, sideOrientation: Mesh.FRONTSIDE })
         vertexData.applyToMesh(this)
 
+        this.material = game.scene.getMaterialByName("groundMaterial")
         this.scaling = new Vector3(1, 1, 1)
         this.physicsImpostor = new PhysicsImpostor(this, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.5, friction: 0.8 }, this.getScene())
 

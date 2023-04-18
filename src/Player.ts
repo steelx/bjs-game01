@@ -22,7 +22,7 @@ export default class Player extends GameObject {
         this.rotations = [0, 0]
 
         // create ball mesh
-        const vertexData = CreateIcoSphereVertexData({ radius: 0.5, subdivisions: 3 });
+        const vertexData = CreateIcoSphereVertexData({ radius: 0.4, subdivisions: 3 });
         vertexData.applyToMesh(this);
 
         // add physics imposter to mesh
@@ -48,7 +48,6 @@ export default class Player extends GameObject {
 
         const arrow = createArrowIndicator(this.getScene())!
         arrow.position.y = 0.1 // Position the arrow above the player
-        arrow.rotation.z = Math.PI * 2 // Rotate the arrow to point in the direction of the player
         arrow.parent = this
 
         this.getScene().registerBeforeRender(() => {

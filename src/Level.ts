@@ -66,7 +66,8 @@ export class Level {
                         if (Number(type) > 0) {
                             // it is a spike
                             const s = new Spike(game, num)
-                            s.position.set(x, 0.1, -z)
+                            s.registerCollision(game.player!)
+                            s.position.set(x, 1, -z)
                             level.spikes.push(s)
                         } else {
                             // it is a key
