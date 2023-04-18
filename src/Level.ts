@@ -4,7 +4,7 @@ import Apple from "./gameObjects/Apple";
 import Block from "./gameObjects/Block";
 import Key from "./gameObjects/Key";
 import Spike from "./gameObjects/Spike";
-import { Scene } from '@babylonjs/core';
+import { Scene, Vector3 } from '@babylonjs/core';
 
 export class Level {
     game: Game;
@@ -91,5 +91,14 @@ export class Level {
         }
 
         return level
+    }
+
+    public getBlockAtPosition(position: Vector3): Block | null {
+        for (const block of this.blocks) {
+            if (block.contains(position)) {
+                return block;
+            }
+        }
+        return null;
     }
 }

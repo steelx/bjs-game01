@@ -46,4 +46,21 @@ export default class Block extends GameObject {
     }
 
     dispose(): void { }
+
+    /**
+    * @description Returns true if the given position is within the boundaries of this block.
+    * @example block.contains(new Vector3(0, 0, 0)) // true
+    */
+    public contains(position: Vector3): boolean {
+        const halfSize = this.scaling.scale(0.5)
+        const minX = this.position.x - halfSize.x
+        const maxX = this.position.x + halfSize.x
+        const minY = this.position.y - halfSize.y
+        const maxY = this.position.y + halfSize.y
+        const minZ = this.position.z - halfSize.z
+        const maxZ = this.position.z + halfSize.z
+        return position.x >= minX && position.x <= maxX &&
+            position.y >= minY && position.y <= maxY &&
+            position.z >= minZ && position.z <= maxZ
+    }
 }
