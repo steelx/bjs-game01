@@ -6,4 +6,7 @@ Babylon js game using vite and Typescript
 `yarn dev`
 
 
-<img width="1349" alt="image" src="https://user-images.githubusercontent.com/3184210/230923741-6f81f189-ecf4-444b-8771-d36aebeea079.png">
+
+
+https://user-images.githubusercontent.com/3184210/232679437-af51fe6a-d332-44eb-aa4f-99e7989dbc5b.mov
+
