@@ -105,10 +105,11 @@ export default class Game {
   private static createScene(engine: Engine): Scene {
     const scene = new Scene(engine)
 
-    const camera = new ArcRotateCamera("FollowCam", Math.PI * 2, Math.PI / 3, 10, Vector3.Zero(), scene);
-    camera.lowerRadiusLimit = 5;
-    camera.upperRadiusLimit = 6;
-    camera.attachControl(engine.getRenderingCanvas(), false);
+    const camera = new ArcRotateCamera("FollowCam", 0, Math.PI / 3, 5, Vector3.Zero(), scene)
+    camera.lowerRadiusLimit = 8
+    camera.upperRadiusLimit = 9
+    camera.setPosition(new Vector3(0, 5, 5))
+    // camera.attachControl(engine.getRenderingCanvas(), true)
 
     // Materials
     // TODO: find a correct way to load materials

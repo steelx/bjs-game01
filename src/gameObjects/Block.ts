@@ -32,11 +32,10 @@ export default class Block extends GameObject {
     constructor(x: number, z: number, game: Game) {
         super("Block", game)
 
-        this.material = game.scene.getMaterialByName("groundMaterial")
-
         const vertexData = CreateBoxVertexData({ size: 1, sideOrientation: Mesh.FRONTSIDE })
         vertexData.applyToMesh(this)
 
+        this.material = game.scene.getMaterialByName("groundMaterial")
         this.scaling = new Vector3(1, 1, 1)
         this.physicsImpostor = new PhysicsImpostor(this, PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.5, friction: 0.8 }, this.getScene())
 
@@ -46,4 +45,21 @@ export default class Block extends GameObject {
     }
 
     dispose(): void { }
+
+    /**
+    * @description Returns true if the given position is within the boundaries of this block.
+    * @example block.contains(new Vector3(0, 0, 0)) // true
+    */
+    public contains(position: Vector3): boolean {
+        const halfSize = this.scaling.scale(0.5)
+        const minX = this.position.x - halfSize.x
+        const maxX = this.position.x + halfSize.x
+        const minY = this.position.y - halfSize.y
+        const maxY = this.position.y + halfSize.y
+        const minZ = this.position.z - halfSize.z
+        const maxZ = this.position.z + halfSize.z
+        return position.x >= minX && position.x <= maxX &&
+            position.y >= minY && position.y <= maxY &&
+            position.z >= minZ && position.z <= maxZ
+    }
 }

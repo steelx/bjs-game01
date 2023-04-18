@@ -1,14 +1,17 @@
 // src/gameObjects/Player.ts
 import Game from "./Game";
 import GameObject from "./GameObject";
-import { ArcRotateCamera, Color3, CreateSphereVertexData, Mesh, MeshBuilder, Nullable, PhysicsImpostor, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import { Color3, CreateIcoSphereVertexData, ArcRotateCamera, Mesh, MeshBuilder, Nullable, PhysicsImpostor, Quaternion, Scene, StandardMaterial, Vector3 } from "@babylonjs/core";
+import InputController from "./controllers/InputController";
 
 export default class Player extends GameObject {
     body: Nullable<PhysicsImpostor> = null//Rigidbody
     directions: [number, number]// two directions forwards and backwards
     rotations: [number, number]// two directions left and right
-    static START_HEIGHT: number = 2
+    static START_HEIGHT: number = 3
     targetRotation: number = 0
+    inputController: any;
+    movementDirection: any;
 
     constructor(game: Game) {
         super("player", game)
@@ -18,17 +21,21 @@ export default class Player extends GameObject {
         // and can rotate in two directions
         this.rotations = [0, 0]
 
-        const size = 0.75
-        const vertexData = CreateSphereVertexData({ diameter: size, segments: 16, sideOrientation: 2 })
-        vertexData.applyToMesh(this)
-        this.scaling = new Vector3(size, size, size)
+        // create ball mesh
+        const vertexData = CreateIcoSphereVertexData({ radius: 0.4, subdivisions: 3 });
+        vertexData.applyToMesh(this);
 
-        // physics body
-        this.body = new PhysicsImpostor(this, PhysicsImpostor.SphereImpostor, { mass: 0.5, restitution: 0.1, friction: 1 }, game.scene);
+        // add physics imposter to mesh
+        this.body = new PhysicsImpostor(
+            this,
+            PhysicsImpostor.SphereImpostor,
+            { mass: 1, restitution: 0.8 },
+            this.scene
+        )
         this.physicsImpostor = this.body
 
-        this.addKeydownListener()
-        this.addKeyupListener()
+        // create input controller for player movement
+        this.inputController = new InputController(game, this)
 
         this.position.y = Player.START_HEIGHT
         this.material = game.scene.getMaterialByName("playerMaterial")
@@ -54,8 +61,7 @@ export default class Player extends GameObject {
     }
 
     dispose(): void {
-        window.removeEventListener("keydown", this.handleKeydown)
-        window.removeEventListener("keyup", this.handleKeyup)
+        this.inputController.dispose()
     }
 
     move(): void {
@@ -66,11 +72,6 @@ export default class Player extends GameObject {
             this.moveTo(1)
         }
 
-        // Update the camera rotation based on the player's target rotation
-        const camera = this.getScene().getCameraByName("FollowCam") as ArcRotateCamera;
-        if (camera) {
-            camera.alpha = this.targetRotation;
-        }
         if (this.rotations[0] !== 0) {
             this.rotateTo(-0.9)
         }
@@ -115,43 +116,6 @@ export default class Player extends GameObject {
         }
     }
 
-    private addKeydownListener(): void {
-        window.addEventListener("keydown", this.handleKeydown)
-    }
-
-    private addKeyupListener(): void {
-        window.addEventListener("keyup", this.handleKeyup)
-    }
-
-    private handleKeydown = (e: KeyboardEvent): void => {
-        switch (e.key) {
-            case "w": //top
-                this.directions[0] = 1;
-                break;
-            case "s": //bottom
-                this.directions[1] = 1;
-                break;
-            case "a": //left
-                this.rotations[0] = 1;
-                break;
-            case "d": //right
-                this.rotations[1] = 1;
-                break;
-        }
-    };
-
-    private handleKeyup = (e: KeyboardEvent): void => {
-        switch (e.key) {
-            case "w": //top
-            case "s": //bottom
-                this.directions = [0, 0];
-                break;
-            case "a": //left
-            case "d": //right
-                this.rotations = [0, 0];
-                break;
-        }
-    };
 }
 
 const createArrowIndicator = (scene: Scene) => {

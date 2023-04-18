@@ -4,7 +4,7 @@ import Apple from "./gameObjects/Apple";
 import Block from "./gameObjects/Block";
 import Key from "./gameObjects/Key";
 import Spike from "./gameObjects/Spike";
-import { Scene } from '@babylonjs/core';
+import { Scene, Vector3 } from '@babylonjs/core';
 
 export class Level {
     game: Game;
@@ -66,7 +66,8 @@ export class Level {
                         if (Number(type) > 0) {
                             // it is a spike
                             const s = new Spike(game, num)
-                            s.position.set(x, 0.1, -z)
+                            s.registerCollision(game.player!)
+                            s.position.set(x, 1, -z)
                             level.spikes.push(s)
                         } else {
                             // it is a key
@@ -91,5 +92,14 @@ export class Level {
         }
 
         return level
+    }
+
+    public getBlockAtPosition(position: Vector3): Block | null {
+        for (const block of this.blocks) {
+            if (block.contains(position)) {
+                return block;
+            }
+        }
+        return null;
     }
 }
